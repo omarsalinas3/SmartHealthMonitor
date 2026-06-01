@@ -19,17 +19,23 @@ import mx.utng.smarthealthmonitor.data.models.MockData
 import mx.utng.smarthealthmonitor.ui.components.FilaHistorial
 import mx.utng.smarthealthmonitor.ui.components.TarjetaDato
 import mx.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     onHistorialClick: () -> Unit = {},
     onAlertClick: () -> Unit = {},
-    // TODO S6: Reemplazar con ViewModel que recibe datos del wearable
-    fc: Int = MockData.fcActual,
-    pasos: Int = MockData.pasosActual,
-    historial: List<LecturaFC> = MockData.historialFC
+    viewModel: DashboardViewModel = viewModel()
 ) {
+    val fc by viewModel.fc.collectAsState()
+    val pasos by viewModel.pasos.collectAsState()
+    val spO2 by viewModel.spO2.collectAsState() // Reto adicional
+    val historial = viewModel.historial
+
     SmartHealthMonitorTheme {
         Scaffold(
             topBar = {
@@ -88,6 +94,15 @@ fun DashboardScreen(
                         label      = "Pasos del día",
                         colorValor = MaterialTheme.colorScheme.primary,
                         icono      = Icons.Default.DirectionsWalk
+                    )
+                }
+                // ── Tarjeta SpO2 (Reto adicional) ─────────
+                item {
+                    TarjetaDato(
+                        valor      = "$spO2",
+                        unidad     = "%",
+                        label      = "Oxígeno en sangre (SpO2)",
+                        colorValor = MaterialTheme.colorScheme.tertiary
                     )
                 }
                 // ── Encabezado historial ──────────────────
