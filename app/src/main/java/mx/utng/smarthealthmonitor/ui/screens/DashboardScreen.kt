@@ -123,6 +123,24 @@ fun DashboardScreen(
                 items(historial, key = { it.id }) { lectura ->
                     FilaHistorial(lectura = lectura)
                 }
+                
+                // ── Botón de Simulación (DEBUG) ───────────
+                item {
+                    if (mx.utng.smarthealthmonitor.BuildConfig.DEBUG) {
+                        OutlinedButton(
+                            onClick = {
+                                // Simular lectura del wearable
+                                val fcSimulado = (60..110).random()
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarFC(fcSimulado)
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarPasos((3000..8000).random())
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarSpO2((90..100).random()) // Reto adicional
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Simular dato del wearable (DEBUG)")
+                        }
+                    }
+                }
             }
         }
     }
