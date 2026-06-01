@@ -15,10 +15,10 @@ Desarrollada como proyecto integrador en UTNG — 9° Cuatrimestre 2025.
 - [x] DashboardScreen — S5
 - [ ] Historial + wearable real — S6
 - [ ] Android TV — S10-S12
-
+ 
 ## Capturas de pantalla
 ![Login](screenshots/login.png)
 ![Dashboard](screenshots/dashboard.png)
  
 ## Autor
-Omar Salinas — UTNG — omar.salinas@utng.edu.mx
+Omar Salinas — UTNG — salinasomar996@gmail.com
