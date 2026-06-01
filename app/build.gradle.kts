@@ -36,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -46,6 +47,10 @@ android {
 }
 
 dependencies {
+    // Wearable Data Layer API
+    implementation("com.google.android.gms:play-services-wearable:18.2.0")
+    // Coroutines para await()
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation(libs.androidx.core.ktx)

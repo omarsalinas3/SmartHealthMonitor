@@ -19,17 +19,23 @@ import mx.utng.smarthealthmonitor.data.models.MockData
 import mx.utng.smarthealthmonitor.ui.components.FilaHistorial
 import mx.utng.smarthealthmonitor.ui.components.TarjetaDato
 import mx.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     onHistorialClick: () -> Unit = {},
     onAlertClick: () -> Unit = {},
-    // TODO S6: Reemplazar con ViewModel que recibe datos del wearable
-    fc: Int = MockData.fcActual,
-    pasos: Int = MockData.pasosActual,
-    historial: List<LecturaFC> = MockData.historialFC
+    viewModel: DashboardViewModel = viewModel()
 ) {
+    val fc by viewModel.fc.collectAsState()
+    val pasos by viewModel.pasos.collectAsState()
+    val spO2 by viewModel.spO2.collectAsState() // Reto adicional
+    val historial = viewModel.historial
+
     SmartHealthMonitorTheme {
         Scaffold(
             topBar = {
@@ -90,6 +96,15 @@ fun DashboardScreen(
                         icono      = Icons.Default.DirectionsWalk
                     )
                 }
+                // ── Tarjeta SpO2 (Reto adicional) ─────────
+                item {
+                    TarjetaDato(
+                        valor      = "$spO2",
+                        unidad     = "%",
+                        label      = "Oxígeno en sangre (SpO2)",
+                        colorValor = MaterialTheme.colorScheme.tertiary
+                    )
+                }
                 // ── Encabezado historial ──────────────────
                 item {
                     Row(
@@ -107,6 +122,24 @@ fun DashboardScreen(
                 // ── Lista del historial ───────────────────
                 items(historial, key = { it.id }) { lectura ->
                     FilaHistorial(lectura = lectura)
+                }
+                
+                // ── Botón de Simulación (DEBUG) ───────────
+                item {
+                    if (mx.utng.smarthealthmonitor.BuildConfig.DEBUG) {
+                        OutlinedButton(
+                            onClick = {
+                                // Simular lectura del wearable
+                                val fcSimulado = (60..110).random()
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarFC(fcSimulado)
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarPasos((3000..8000).random())
+                                mx.utng.smarthealthmonitor.data.SmartHealthRepository.actualizarSpO2((90..100).random()) // Reto adicional
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Simular dato del wearable (DEBUG)")
+                        }
+                    }
                 }
             }
         }
