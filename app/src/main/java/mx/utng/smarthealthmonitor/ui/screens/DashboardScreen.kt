@@ -14,8 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import mx.utng.smarthealthmonitor.data.models.LecturaFC
-import mx.utng.smarthealthmonitor.data.models.MockData
 import mx.utng.smarthealthmonitor.ui.components.FilaHistorial
 import mx.utng.smarthealthmonitor.ui.components.TarjetaDato
 import mx.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
@@ -23,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
+import mx.utng.smarthealthmonitor.data.models.MockData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,8 +32,8 @@ fun DashboardScreen(
 ) {
     val fc by viewModel.fc.collectAsState()
     val pasos by viewModel.pasos.collectAsState()
-    val spO2 by viewModel.spO2.collectAsState() // Reto adicional
-    val historial = viewModel.historial
+    val spO2 by viewModel.spO2.collectAsState()
+    val historial by viewModel.historial.collectAsState()
 
     SmartHealthMonitorTheme {
         Scaffold(

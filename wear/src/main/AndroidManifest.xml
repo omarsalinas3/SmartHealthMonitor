@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mx.utng.smarthealthmonitor.wear">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+    
+    <!-- Permisos para Health Services -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:label="SmartHealth Wear"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault">
+        
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+            
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+            
+        <!-- Registro del servicio de Health Services -->
+        <service
+            android:name=".HealthDataService"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_LISTENER">
+            <intent-filter>
+                <action android:name="androidx.health.services.client.PASSIVE_LISTENER" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".WearMainActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.DeviceDefault">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
