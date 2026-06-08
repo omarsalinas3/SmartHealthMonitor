@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-08T03:28:19.303398100Z">
+        <DropdownSelection timestamp="2026-06-08T03:41:29.774271Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Wear_OS_Square_API_36.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Pixel_7_API_36.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="wear">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-05T19:40:37.137622300Z">
+        <DropdownSelection timestamp="2026-06-08T03:47:54.152366800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Pixel_7_API_36.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Wear_OS_Square_API_36.avd" />
             </handle>
           </Target>
         </DropdownSelection>

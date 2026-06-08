@@ -11,12 +11,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
@@ -69,31 +73,59 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
                     .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    // FC del sensor real
                     Text(
-                        text = "❤️",
-                        fontSize = 28.sp
-                    )
-                    Text(
-                        text = if (bpm > 0) "$bpm bpm" else "Leyendo FC...",
-                        fontSize = 18.sp,
+                        text = if (bpm > 0) "❤️ $bpm bpm" else "❤️ Leyendo FC...",
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (bpm > 100) Color.Red else Color.White
+                        color = if (bpm > 100) Color.Red else Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    // Pasos con botón de simulación
+                    Text(
+                        text = "🚶 $pasos pasos",
+                        fontSize = 14.sp,
+                        color = Color(0xFF64B5F6),
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "🚶",
-                        fontSize = 20.sp
-                    )
-                    Text(
-                        text = if (pasos > 0) "$pasos pasos" else "Contando...",
-                        fontSize = 14.sp,
-                        color = Color(0xFF64B5F6)
-                    )
+                    // Botón para simular pasos (reto adicional)
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color(0xFF1565C0))
+                            .clickable {
+                                val nuevoPasos = _pasosState.value + (500..1500).random()
+                                _pasosState.value = nuevoPasos
+                                lifecycleScope.launch {
+                                    try {
+                                        wearDataSender.enviarPasos(nuevoPasos)
+                                        Log.d("WearMain", "Pasos enviados: $nuevoPasos")
+                                    } catch (e: Exception) {
+                                        Log.e("WearMain", "Error pasos: ${e.message}")
+                                    }
+                                }
+                            }
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "+ Simular Pasos",
+                            fontSize = 11.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "SmartHealth Monitor",
-                        fontSize = 10.sp,
+                        text = "SmartHealth",
+                        fontSize = 9.sp,
                         color = Color.Gray
                     )
                 }
