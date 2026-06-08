@@ -8,15 +8,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import mx.utng.smarthealthmonitor.data.models.MockData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mx.utng.smarthealthmonitor.ui.components.FilaHistorial
 import mx.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
+import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistorialScreen(onBack: () -> Unit) {
+fun HistorialScreen(
+    onBack: () -> Unit,
+    viewModel: DashboardViewModel = viewModel()
+) {
+    // Historial desde Room (reactivo)
+    val historial by viewModel.historial.collectAsState()
+
     SmartHealthMonitorTheme {
         Scaffold(
             topBar = {
@@ -44,8 +53,19 @@ fun HistorialScreen(onBack: () -> Unit) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(MockData.historialFC, key = { it.id }) { lectura ->
-                    FilaHistorial(lectura = lectura)
+                if (historial.isEmpty()) {
+                    item {
+                        Text(
+                            text = "Aún no hay lecturas guardadas.\nUsa el botón de simulación en el Dashboard.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    items(historial, key = { it.id }) { lectura ->
+                        FilaHistorial(lectura = lectura)
+                    }
                 }
             }
         }

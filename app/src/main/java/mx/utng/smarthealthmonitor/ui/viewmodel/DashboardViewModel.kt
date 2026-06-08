@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import mx.utng.smarthealthmonitor.data.models.MockData
 import mx.utng.smarthealthmonitor.data.SmartHealthRepository
+import mx.utng.smarthealthmonitor.data.db.LecturaFC
  
 class DashboardViewModel : ViewModel() {
  
     // FC: viene del wearable real vía Repository.
-    // Si es 0 (sin dato aún), usar valor simulado.
     val fc: StateFlow<Int> = SmartHealthRepository.fcFlow
         .map { if (it == 0) MockData.fcActual else it }
         .stateIn(
@@ -29,12 +29,19 @@ class DashboardViewModel : ViewModel() {
         
     // Reto adicional: SpO2
     val spO2: StateFlow<Int> = SmartHealthRepository.spO2Flow
-        .map { if (it == 0) 98 else it } // 98% valor por defecto simulado
+        .map { if (it == 0) 98 else it }
         .stateIn(
             scope        = viewModelScope,
             started      = SharingStarted.WhileSubscribed(5_000),
             initialValue = 98
         )
-        
-    val historial = MockData.historialFC  // TODO S7: Room
+
+    // Ejercicio 02: historial desde Room (reactivo)
+    val historial: StateFlow<List<LecturaFC>> = SmartHealthRepository
+        .obtenerHistorial()
+        .stateIn(
+            scope        = viewModelScope,
+            started      = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 }
