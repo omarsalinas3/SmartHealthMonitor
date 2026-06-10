@@ -22,9 +22,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 import mx.utng.smarthealthmonitor.data.models.MockData
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,8 +39,10 @@ fun DashboardScreen(
     val pasos by viewModel.pasos.collectAsState()
     val spO2 by viewModel.spO2.collectAsState()
     val historial by viewModel.historial.collectAsState()
-    // Estado del diálogo de alerta
+    // Estado del diálogo y Snackbar
     var showAlertDialog by remember { mutableStateOf(false) }
+    val snackbarHost = remember { SnackbarHostState() }
+    val scope        = rememberCoroutineScope()
 
     SmartHealthMonitorTheme {
         Scaffold(
@@ -67,7 +71,9 @@ fun DashboardScreen(
                         tint               = MaterialTheme.colorScheme.onError
                     )
                 }
-            }
+            },
+            // Snackbar integrado en el Scaffold
+            snackbarHost = { SnackbarHost(hostState = snackbarHost) }
         ) { paddingValues ->
             // Diálogo de alerta sobre el Dashboard
             if (showAlertDialog) {
@@ -76,6 +82,21 @@ fun DashboardScreen(
                     onDismiss   = { showAlertDialog = false },
                     onConfirmar = { nota ->
                         showAlertDialog = false
+                        // ⭐ Reto adicional: Snackbar con acción 'Deshacer'
+                        scope.launch {
+                            val result = snackbarHost.showSnackbar(
+                                message     = "✅ Alerta enviada a tus contactos de emergencia",
+                                actionLabel = "Deshacer",
+                                duration    = SnackbarDuration.Long
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                // Usuario presionó Deshacer
+                                snackbarHost.showSnackbar(
+                                    message  = "Alerta cancelada",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
                         onAlertClick()
                     }
                 )
