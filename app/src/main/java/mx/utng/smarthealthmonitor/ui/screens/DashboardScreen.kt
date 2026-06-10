@@ -20,6 +20,9 @@ import mx.utng.smarthealthmonitor.ui.theme.SmartHealthMonitorTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 import mx.utng.smarthealthmonitor.data.models.MockData
 
@@ -34,6 +37,8 @@ fun DashboardScreen(
     val pasos by viewModel.pasos.collectAsState()
     val spO2 by viewModel.spO2.collectAsState()
     val historial by viewModel.historial.collectAsState()
+    // Estado del diálogo de alerta
+    var showAlertDialog by remember { mutableStateOf(false) }
 
     SmartHealthMonitorTheme {
         Scaffold(
@@ -53,17 +58,28 @@ fun DashboardScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick       = onAlertClick,
+                    onClick        = { showAlertDialog = true },
                     containerColor = MaterialTheme.colorScheme.error
                 ) {
                     Icon(
-                        imageVector       = Icons.Default.Warning,
+                        imageVector        = Icons.Default.Warning,
                         contentDescription = "Enviar alerta de emergencia",
-                        tint              = MaterialTheme.colorScheme.onError
+                        tint               = MaterialTheme.colorScheme.onError
                     )
                 }
             }
         ) { paddingValues ->
+            // Diálogo de alerta sobre el Dashboard
+            if (showAlertDialog) {
+                AlertaScreen(
+                    fc          = fc,
+                    onDismiss   = { showAlertDialog = false },
+                    onConfirmar = { nota ->
+                        showAlertDialog = false
+                        onAlertClick()
+                    }
+                )
+            }
             // ⚠️ paddingValues OBLIGATORIO
             LazyColumn(
                 modifier = Modifier
