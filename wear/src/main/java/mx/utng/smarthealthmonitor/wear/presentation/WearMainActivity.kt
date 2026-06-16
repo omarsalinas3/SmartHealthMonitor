@@ -56,8 +56,8 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
 
         setContent {
             SmartHealthWearTheme {
-                // Ejercicio 02 S9: WearDashboardScreen con FC en tiempo real
-                WearDashboardScreen()
+                // Ejercicio 03 S9: NavGraph con SwipeDismissableNavHost
+                SmartHealthWearNavGraph()
             }
         }
     }
