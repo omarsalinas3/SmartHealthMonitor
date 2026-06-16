@@ -1,55 +1,73 @@
-// wear/.../presentation/WearDashboardScreen.kt
+// presentation/WearDashboardScreen.kt
 package mx.utng.smarthealthmonitor.wear.presentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.*
+import mx.utng.smarthealthmonitor.wear.presentation.components.WearFCCard
 
-/**
- * Pantalla principal del Dashboard en el reloj.
- * TODO Ej.02: conectar con datos reales del sensor y WearDataSender.
- */
 @Composable
-fun WearDashboardScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-        contentAlignment = Alignment.Center
+fun WearDashboardScreen(
+    onAlertClick: () -> Unit = {},
+    viewModel: WearDashboardViewModel = viewModel()
+) {
+    val fc    by viewModel.fc.collectAsState()
+    val pasos by viewModel.pasos.collectAsState()           // ⭐ Reto adicional
+    val listState = rememberScalingLazyListState()
+
+    Scaffold(
+        timeText = {
+            // La hora desaparece al hacer scroll
+            TimeText(modifier = Modifier.scrollAway(listState))
+        },
+        positionIndicator = {
+            PositionIndicator(scalingLazyListState = listState)
+        }
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(16.dp)
+        ScalingLazyColumn(
+            state    = listState,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = "❤️",
-                fontSize = 32.sp,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "SmartHealth",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.primary,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Monitor",
-                fontSize = 12.sp,
-                color = MaterialTheme.colors.onBackground,
-                textAlign = TextAlign.Center
-            )
+            // Item 1: Card de FC
+            item {
+                WearFCCard(
+                    fc       = fc,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            // Item 2: Chip de Alerta (rojo)
+            item {
+                Chip(
+                    label  = { Text("⚠ Alerta") },
+                    onClick = onAlertClick,
+                    colors  = ChipDefaults.primaryChipColors(
+                        backgroundColor = MaterialTheme.colors.error
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            // ⭐ Reto adicional: CompactChip con conteo de pasos
+            item {
+                CompactChip(
+                    label = {
+                        Text(
+                            text = if (pasos == 0) "-- pasos"
+                                   else "%,d pasos".format(pasos)
+                        )
+                    },
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

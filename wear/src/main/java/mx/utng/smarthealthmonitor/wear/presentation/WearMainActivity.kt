@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import mx.utng.smarthealthmonitor.wear.WearDataSender
+import mx.utng.smarthealthmonitor.wear.data.WearHealthRepository
 import mx.utng.smarthealthmonitor.wear.presentation.theme.SmartHealthWearTheme
 
 /**
@@ -27,9 +28,6 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
     private var heartRateSensor: Sensor? = null
     private var stepCountSensor: Sensor? = null
     private lateinit var wearDataSender: WearDataSender
-
-    private val _bpmState = mutableStateOf(0)
-    private val _pasosState = mutableStateOf(0)
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -57,9 +55,8 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
         )
 
         setContent {
-            // Ejercicio 01 S9: Tema Wear OS aplicado
             SmartHealthWearTheme {
-                // TODO Ej.02: reemplazar con WearNavGraph
+                // Ejercicio 02 S9: WearDashboardScreen con FC en tiempo real
                 WearDashboardScreen()
             }
         }
@@ -81,7 +78,8 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
             Sensor.TYPE_HEART_RATE -> {
                 val bpm = event.values[0].toInt()
                 if (bpm > 0) {
-                    _bpmState.value = bpm
+                    // Actualizar UI del reloj en tiempo real
+                    WearHealthRepository.actualizarFC(bpm)
                     Log.d("WearMain", "FC: $bpm bpm")
                     lifecycleScope.launch {
                         try { wearDataSender.enviarFC(bpm) }
@@ -91,7 +89,8 @@ class WearMainActivity : ComponentActivity(), SensorEventListener {
             }
             Sensor.TYPE_STEP_COUNTER -> {
                 val pasos = event.values[0].toInt()
-                _pasosState.value = pasos
+                // Actualizar UI del reloj en tiempo real
+                WearHealthRepository.actualizarPasos(pasos)
                 lifecycleScope.launch {
                     try { wearDataSender.enviarPasos(pasos) }
                     catch (e: Exception) { Log.e("WearMain", "Error pasos: ${e.message}") }
