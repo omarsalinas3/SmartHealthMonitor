@@ -1,23 +1,23 @@
 {
     "logs": [
         {
-            "outputFile": "mx.utng.smarthealthmonitor.wear-mergeDebugResources-45:/values-pl/values-pl.xml",
+            "outputFile": "mx.utng.smarthealthmonitor.wear-mergeDebugResources-65:/values-pl/values-pl.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\41117726f4c1fb57e6b84f96fb52ecfa\\transformed\\core-1.12.0\\res\\values-pl\\values-pl.xml",
+                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\ce63eb8925b30e18d51d44132afc748e\\transformed\\ui-release\\res\\values-pl\\values-pl.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,152,254,352,451,565,670,792",
-                        "endColumns": "96,101,97,98,113,104,121,100",
-                        "endOffsets": "147,249,347,446,560,665,787,888"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,200,285,394,499,576,653,746,836,919,1002,1089,1161,1237,1315,1391,1473,1541",
+                        "endColumns": "94,84,108,104,76,76,92,89,82,82,86,71,75,77,75,81,67,119",
+                        "endOffsets": "195,280,389,494,571,648,741,831,914,997,1084,1156,1232,1310,1386,1468,1536,1656"
                     },
                     "to": {
-                        "startLines": "2,3,4,5,6,7,8,41",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,202,304,402,501,615,720,4291",
-                        "endColumns": "96,101,97,98,113,104,121,100",
-                        "endOffsets": "197,299,397,496,610,715,837,4387"
+                        "startLines": "9,10,32,33,34,43,44,45,46,47,48,49,50,51,52,54,55,56",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "842,937,3617,3726,3831,4585,4662,4755,4845,4928,5011,5098,5170,5246,5324,5501,5583,5651",
+                        "endColumns": "94,84,108,104,76,76,92,89,82,82,86,71,75,77,75,81,67,119",
+                        "endOffsets": "932,1017,3721,3826,3903,4657,4750,4840,4923,5006,5093,5165,5241,5319,5395,5578,5646,5766"
                     }
                 },
                 {
@@ -38,37 +38,54 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\d10c04998ff7de86a40d4330b542463f\\transformed\\foundation-release\\res\\values-pl\\values-pl.xml",
+                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\e8f019507903d52aabaccbc220ea8547\\transformed\\wear-1.3.0\\res\\values-pl\\values-pl.xml",
                     "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,143",
-                        "endColumns": "87,87",
-                        "endOffsets": "138,226"
+                        "startLines": "2,3,4,5,6",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,161,284,398,507",
+                        "endColumns": "105,122,113,108,113",
+                        "endOffsets": "156,279,393,502,616"
                     },
                     "to": {
-                        "startLines": "45,46",
-                        "startColumns": "4,4",
-                        "startOffsets": "4662,4750",
-                        "endColumns": "87,87",
-                        "endOffsets": "4745,4833"
+                        "startLines": "29,30,31,59,60",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "3274,3380,3503,5947,6056",
+                        "endColumns": "105,122,113,108,113",
+                        "endOffsets": "3375,3498,3612,6051,6165"
                     }
                 },
                 {
-                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\1cf4d40faa6b5665fa2aa08bf5e81f5e\\transformed\\ui-release\\res\\values-pl\\values-pl.xml",
+                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\6bab9da012749428f9972feb3270747d\\transformed\\horologist-compose-material-0.6.17\\res\\values-pl\\values-pl.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,200,285,394,499,576,653,746,836,919,990,1060,1143,1230,1302,1384,1452",
-                        "endColumns": "94,84,108,104,76,76,92,89,82,70,69,82,86,71,81,67,119",
-                        "endOffsets": "195,280,389,494,571,648,741,831,914,985,1055,1138,1225,1297,1379,1447,1567"
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,144,231,316,400,485,568,651",
+                        "endColumns": "88,86,84,83,84,82,82,80",
+                        "endOffsets": "139,226,311,395,480,563,646,727"
                     },
                     "to": {
-                        "startLines": "9,10,29,30,31,32,33,34,35,36,37,38,39,40,42,43,44",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "842,937,3274,3383,3488,3565,3642,3735,3825,3908,3979,4049,4132,4219,4392,4474,4542",
-                        "endColumns": "94,84,108,104,76,76,92,89,82,70,69,82,86,71,81,67,119",
-                        "endOffsets": "932,1017,3378,3483,3560,3637,3730,3820,3903,3974,4044,4127,4214,4286,4469,4537,4657"
+                        "startLines": "35,36,37,38,39,40,41,42",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "3908,3997,4084,4169,4253,4338,4421,4504",
+                        "endColumns": "88,86,84,83,84,82,82,80",
+                        "endOffsets": "3992,4079,4164,4248,4333,4416,4499,4580"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\9d72e51f6c82e3d2dd84e1cf8d7a597b\\transformed\\core-1.13.1\\res\\values-pl\\values-pl.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,152,254,352,451,565,670,792",
+                        "endColumns": "96,101,97,98,113,104,121,100",
+                        "endOffsets": "147,249,347,446,560,665,787,888"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,53",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,202,304,402,501,615,720,5400",
+                        "endColumns": "96,101,97,98,113,104,121,100",
+                        "endOffsets": "197,299,397,496,610,715,837,5496"
                     }
                 },
                 {
@@ -86,6 +103,23 @@
                         "startOffsets": "1022,1126,1294,1416,1526,1677,1802,1913,2152,2323,2432,2607,2735,2894,3055,3124,3190",
                         "endColumns": "103,167,121,109,150,124,110,98,170,108,174,127,158,160,68,65,83",
                         "endOffsets": "1121,1289,1411,1521,1672,1797,1908,2007,2318,2427,2602,2730,2889,3050,3119,3185,3269"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\salin\\.gradle\\caches\\8.11.1\\transforms\\3c1f7bbd846cbe34a81d4a5c7c277259\\transformed\\foundation-release\\res\\values-pl\\values-pl.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,143",
+                        "endColumns": "87,87",
+                        "endOffsets": "138,226"
+                    },
+                    "to": {
+                        "startLines": "57,58",
+                        "startColumns": "4,4",
+                        "startOffsets": "5771,5859",
+                        "endColumns": "87,87",
+                        "endOffsets": "5854,5942"
                     }
                 }
             ]
