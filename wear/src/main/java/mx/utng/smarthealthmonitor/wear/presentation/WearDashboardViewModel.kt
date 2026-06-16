@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import mx.utng.smarthealthmonitor.wear.data.WearHealthRepository
+import mx.utng.smarthealthmonitor.wear.data.WearLecturaFC
 
 class WearDashboardViewModel : ViewModel() {
 
@@ -23,8 +24,16 @@ class WearDashboardViewModel : ViewModel() {
     // ⭐ Reto adicional: pasos del día
     val pasos: StateFlow<Int> = WearHealthRepository.pasosFlow
         .stateIn(
-            scope   = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            scope        = viewModelScope,
+            started      = SharingStarted.WhileSubscribed(5_000),
             initialValue = 0
+        )
+
+    // Historial de FC desde WearHealthRepository (en memoria)
+    val historial: StateFlow<List<WearLecturaFC>> = WearHealthRepository.historialFlow
+        .stateIn(
+            scope        = viewModelScope,
+            started      = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
         )
 }
