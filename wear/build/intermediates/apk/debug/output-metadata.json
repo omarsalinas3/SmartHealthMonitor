@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "mx.utng.smarthealthmonitor",
+  "applicationId": "mx.utng.smarthealthmonitor.wear",
   "variantName": "debug",
   "elements": [
     {

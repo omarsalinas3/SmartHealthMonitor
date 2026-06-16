@@ -34,7 +34,7 @@
         </service>
 
         <activity
-            android:name=".WearMainActivity"
+            android:name=".presentation.WearMainActivity"
             android:exported="true"
             android:theme="@android:style/Theme.DeviceDefault">
             <intent-filter>
