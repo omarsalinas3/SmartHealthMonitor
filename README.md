@@ -135,6 +135,31 @@ DashboardScreen + HistorialScreen (UI actualizada en tiempo real)
 
 ---
 
+## Unidad II — Wear OS
+
+| Pantalla | Descripción |
+|---|---|
+| WearDashboardScreen | FC en tiempo real con ScalingLazyColumn y TimeText |
+| WearHistorialScreen | Lista con Rotary Input (corona del reloj) |
+| WearAlertaScreen | Botones circulares de confirmación |
+| SmartHealth WatchFace | Hora + FC en el WatchFace nativo con modo AOD |
+
+### Capturas Wear OS
+
+| WatchFace | Wear Dashboard |
+|---|---|
+| ![WatchFace](screenshots/watchface.png) | ![WearDashboard](screenshots/wear_dashboard.png) |
+
+### Tags de versión
+
+| Tag | Contenido |
+|---|---|
+| `v1.0.0` | Unidad I completa — Login + Dashboard + Historial + Alerta |
+| `v1.1.0` | Wear OS UI — WearDashboard + WearAlerta + SwipeDismiss |
+| `v1.2.0` | Wear OS Avanzado — Rotary Input + WatchFace + AOD |
+
+---
+
 ## Autor
 
 **Omar Salinas** — UTNG — Ing. en Desarrollo y Gestión de Software  
