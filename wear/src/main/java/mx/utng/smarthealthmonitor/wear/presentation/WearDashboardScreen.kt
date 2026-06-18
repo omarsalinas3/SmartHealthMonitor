@@ -15,16 +15,16 @@ import mx.utng.smarthealthmonitor.wear.presentation.components.WearFCCard
 
 @Composable
 fun WearDashboardScreen(
-    onAlertClick: () -> Unit = {},
+    onAlertClick:     () -> Unit = {},
+    onHistorialClick: () -> Unit = {},    // ← Ejercicio 01 S10
     viewModel: WearDashboardViewModel = viewModel()
 ) {
     val fc    by viewModel.fc.collectAsState()
-    val pasos by viewModel.pasos.collectAsState()           // ⭐ Reto adicional
+    val pasos by viewModel.pasos.collectAsState()
     val listState = rememberScalingLazyListState()
 
     Scaffold(
         timeText = {
-            // La hora desaparece al hacer scroll
             TimeText(modifier = Modifier.scrollAway(listState))
         },
         positionIndicator = {
@@ -55,6 +55,15 @@ fun WearDashboardScreen(
                 )
             }
 
+            // Item 3: Chip de Historial — Ejercicio 01 S10
+            item {
+                Chip(
+                    label    = { Text("📋 Historial") },
+                    onClick  = onHistorialClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             // ⭐ Reto adicional: CompactChip con conteo de pasos
             item {
                 CompactChip(
@@ -64,7 +73,7 @@ fun WearDashboardScreen(
                                    else "%,d pasos".format(pasos)
                         )
                     },
-                    onClick = { },
+                    onClick  = { },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

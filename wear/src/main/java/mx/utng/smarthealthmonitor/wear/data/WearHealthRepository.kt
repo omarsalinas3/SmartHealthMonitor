@@ -4,12 +4,21 @@ package mx.utng.smarthealthmonitor.wear.data
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+/** Lectura de FC local en el reloj (sin Room, en memoria). */
+data class WearLecturaFC(
+    val id: Int,
+    val valorBpm: Int,
+    val hora: String,
+    val esNormal: Boolean = valorBpm in 60..100
+)
 
 /**
  * Repositorio singleton del módulo Wear OS.
- * El reloj tiene su propio estado local de FC y pasos
- * que se actualiza desde WearMainActivity (SensorManager).
- * Equivalente al SmartHealthRepository del módulo app.
+ * Mantiene FC, pasos e historial en memoria.
  */
 object WearHealthRepository {
 
@@ -19,8 +28,18 @@ object WearHealthRepository {
     private val _pasosFlow = MutableStateFlow(0)
     val pasosFlow: StateFlow<Int> = _pasosFlow.asStateFlow()
 
+    // Historial en memoria (últimas 50 lecturas, orden descendente)
+    private val _historialFlow = MutableStateFlow<List<WearLecturaFC>>(emptyList())
+    val historialFlow: StateFlow<List<WearLecturaFC>> = _historialFlow.asStateFlow()
+
+    private var contadorId = 0
+
     fun actualizarFC(bpm: Int) {
         _fcFlow.value = bpm
+        // Agregar al historial local
+        val hora = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        val nueva = WearLecturaFC(id = ++contadorId, valorBpm = bpm, hora = hora)
+        _historialFlow.value = (listOf(nueva) + _historialFlow.value).take(50)
     }
 
     fun actualizarPasos(pasos: Int) {
