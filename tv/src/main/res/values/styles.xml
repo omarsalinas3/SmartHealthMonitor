@@ -1,0 +1,5 @@
+<resources>
+    <!-- Tema Leanback estándar para Android TV -->
+    <style name="Theme.Leanback" parent="Theme.Leanback.GuidedStep">
+    </style>
+</resources>
