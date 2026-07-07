@@ -1,19 +1,19 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
-    namespace = "mx.utng.smarthealthmonitor.tv"
-    compileSdk = 34
+    namespace   = "mx.utng.smarthealthmonitor.tv"
+    compileSdk  = 35
 
     defaultConfig {
         applicationId = "mx.utng.smarthealthmonitor.tv"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk        = 21
+        targetSdk     = 35
+        versionCode   = 1
+        versionName   = "1.0"
     }
 
     buildTypes {
@@ -32,25 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
-
-    // Leanback Library — Ejercicio 01
-    implementation("androidx.leanback:leanback:1.2.0-alpha04")
-    implementation("androidx.leanback:leanback-preference:1.2.0-alpha04")
-
-    // Glide para cargar imágenes en Leanback
+    // Leanback Library — el estándar de Android TV
+    implementation("androidx.leanback:leanback:1.2.0")
+    // Glide para cargar imágenes en las cards
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Compartir Room + Repository con módulo app
+    implementation(project(":app"))
+    // ViewModel + Coroutines
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 }

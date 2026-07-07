@@ -1,0 +1,8 @@
+<resources>
+    <!-- Paleta SmartHealth TV -->
+    <color name="sh_primary">#1565C0</color>   <!-- Azul principal -->
+    <color name="sh_amber">#FFA000</color>      <!-- Ámbar para acentos / alertas -->
+    <color name="sh_dark">#0D1117</color>       <!-- Fondo oscuro TV -->
+    <color name="sh_surface">#1E2A3A</color>    <!-- Superficie de las tarjetas -->
+    <color name="sh_on_surface">#B0BEC5</color> <!-- Texto secundario -->
+</resources>
