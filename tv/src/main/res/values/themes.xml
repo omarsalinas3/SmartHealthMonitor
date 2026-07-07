@@ -6,5 +6,6 @@
         <item name="colorPrimary">@color/sh_primary</item>
         <item name="colorAccent">@color/sh_amber</item>
         <item name="android:colorBackground">@color/sh_dark</item>
+        <item name="colorError">@color/sh_error</item>
     </style>
 </resources>
