@@ -1,0 +1,46 @@
+// tv/.../tv/FCCardPresenter.kt
+package mx.utng.smarthealthmonitor.tv
+
+import android.graphics.Color
+import android.view.ViewGroup
+import androidx.leanback.widget.ImageCardView
+import androidx.leanback.widget.Presenter
+
+class FCCardPresenter : Presenter() {
+
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
+        val cardView = ImageCardView(parent.context).apply {
+            // CRÍTICO: sin estas dos líneas,
+            // el D-pad no puede navegar a este card
+            isFocusable            = true
+            isFocusableInTouchMode = true
+            setMainImageDimensions(240, 180)
+            // REQUERIDO: lb_image_card_view necesita dimensiones explícitas
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+        return ViewHolder(cardView)
+    }
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+        val card    = viewHolder.view as ImageCardView
+        val lectura = item as LecturaFC
+
+        card.titleText   = "${lectura.valorBpm} bpm"
+        card.contentText = lectura.hora
+
+        // Color de fondo según si FC es normal
+        val bgColor = if (lectura.esNormal) {
+            Color.parseColor("#1B4F8A")  // sh_primary — FC en rango
+        } else {
+            Color.parseColor("#B3261E")  // sh_error   — FC alta
+        }
+        card.setBackgroundColor(bgColor)
+    }
+
+    override fun onUnbindViewHolder(viewHolder: ViewHolder) {
+        (viewHolder.view as ImageCardView).mainImage = null
+    }
+}

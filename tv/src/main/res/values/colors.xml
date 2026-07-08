@@ -1,0 +1,10 @@
+<resources>
+    <!-- Paleta SmartHealth TV — MD3 de S2 -->
+    <color name="sh_primary">#1B4F8A</color>   <!-- Azul oscuro principal MD3 -->
+    <color name="sh_amber">#D4860A</color>      <!-- Ámbar/dorado para acentos -->
+    <color name="sh_dark">#0D1117</color>       <!-- Fondo oscuro TV (GitHub dark) -->
+    <color name="sh_error">#B3261E</color>      <!-- Rojo error MD3 -->
+    <color name="sh_surface">#1E2A3A</color>    <!-- Superficie de tarjetas -->
+    <color name="sh_on_surface">#B0BEC5</color> <!-- Texto secundario -->
+    <color name="sh_white">#FFFFFF</color>
+</resources>
