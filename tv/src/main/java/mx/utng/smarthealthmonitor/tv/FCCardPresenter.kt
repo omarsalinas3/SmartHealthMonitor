@@ -15,6 +15,11 @@ class FCCardPresenter : Presenter() {
             isFocusable            = true
             isFocusableInTouchMode = true
             setMainImageDimensions(240, 180)
+            // REQUERIDO: lb_image_card_view necesita dimensiones explícitas
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
         return ViewHolder(cardView)
     }
