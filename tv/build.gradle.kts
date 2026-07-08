@@ -39,10 +39,11 @@ dependencies {
     implementation("androidx.leanback:leanback:1.2.0")
     // Glide para cargar imágenes en las cards
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    // ViewModel + Coroutines
+    // ViewModel + Fragment KTX (by viewModels()) + Coroutines
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    // Room — para acceder al historial de FC localmente
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    // Room — historial de FC local del módulo TV
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
