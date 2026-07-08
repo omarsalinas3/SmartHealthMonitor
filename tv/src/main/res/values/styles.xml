@@ -1,5 +1,6 @@
 <resources>
-    <!-- Tema Leanback estándar para Android TV -->
-    <style name="Theme.Leanback" parent="Theme.Leanback.GuidedStep">
-    </style>
+    <!-- Este archivo está intencionalmente vacío.
+         Theme.Leanback viene de la librería androidx.leanback.
+         NO redefinir Theme.Leanback aquí — causa conflictos
+         con lb_image_card_view y otros layouts internos de Leanback. -->
 </resources>
