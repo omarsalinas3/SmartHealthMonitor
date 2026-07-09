@@ -3,80 +3,137 @@ package mx.utng.smarthealthmonitor.tv.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.tv.material3.*
-import mx.utng.smarthealthmonitor.tv.TvMockData
+import androidx.tv.material3.ClickableSurfaceDefaults
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.Surface
+import androidx.tv.material3.Text
 import mx.utng.smarthealthmonitor.tv.TvViewModel
+import mx.utng.smarthealthmonitor.tv.TvViewModelFactory
 
 /**
  * Pantalla de detalle de una lectura de FC.
- * Muestra datos completos y botones de acción navegables con D-pad.
- * El botón 'Reproducir' navega a TvPlaybackScreen.
+ * Dos botones (Reproducir / Volver) navegables con D-pad.
+ * FocusRequester posiciona el foco en el primer boton al entrar.
+ * Ejercicio 02 — S12.
  */
 @Composable
 fun TvDetailScreen(
-    lecturaId: Int,
+    lecturaId    : Int,
     navController: NavController,
-    viewModel: TvViewModel = viewModel()
+    viewModel    : TvViewModel = viewModel(
+        factory = TvViewModelFactory(LocalContext.current)
+    )
 ) {
-    val historial by viewModel.historial.collectAsStateWithLifecycle()
+    val state   by viewModel.state.collectAsStateWithLifecycle()
+    val lectura = state.lecturas.find { it.id == lecturaId } ?: return
 
-    // Buscar en Room o fallback a mock
-    val lectura = historial.find { it.id == lecturaId }
-        ?: TvMockData.historialFC.getOrNull(lecturaId % TvMockData.historialFC.size)
+    // FocusRequester para mover el foco al primer boton al entrar
+    val firstBtnFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstBtnFocus.requestFocus() }
 
-    val bgColor = if (lectura?.esNormal == true) Color(0xFF1B4F8A) else Color(0xFFB3261E)
-    val estado  = if (lectura?.esNormal == true) "✅ Normal" else "⚠ Fuera de rango"
-
-    Column(
-        modifier = Modifier
+    Row(
+        modifier             = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1117))
+            .background(Color(0xFF0D1B4A))
             .padding(64.dp),
-        verticalArrangement   = Arrangement.Center,
-        horizontalAlignment   = Alignment.Start
+        horizontalArrangement = Arrangement.spacedBy(48.dp)
     ) {
-        Text("Detalle de lectura #$lecturaId",
-             color = Color.Gray, fontSize = 14.sp)
 
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            text     = "${lectura?.valorBpm ?: "--"} bpm",
-            color    = Color.White,
-            fontSize = 64.sp
-        )
-
-        Text(
-            text     = "Hora: ${lectura?.hora ?: "--"}",
-            color    = Color.LightGray,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Text(
-            text     = estado,
-            color    = if (lectura?.esNormal == true) Color(0xFF64B5F6) else Color(0xFFEF9A9A),
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 4.dp, bottom = 32.dp)
-        )
-
-        // ── Botones de acción navegables con D-pad ────────────────────
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Button(onClick = { navController.navigate("playback") }) {
-                Text("▶ Reproducir")
+        // Panel izquierdo — icono + datos
+        Column(
+            modifier            = Modifier.weight(0.4f),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Box(
+                modifier         = Modifier
+                    .size(200.dp)
+                    .background(Color(0xFF1565C0), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("❤", fontSize = 80.sp)
             }
-            OutlinedButton(onClick = { navController.popBackStack() }) {
-                Text("← Volver")
+            Text(
+                "${lectura.bpm} bpm",
+                style      = MaterialTheme.typography.displayMedium,
+                color      = Color.White,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                "Estado: ${lectura.estado}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White.copy(alpha = 0.8f)
+            )
+            Text(
+                "Hora: ${lectura.hora}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.6f)
+            )
+        }
+
+        // Panel derecho — botones de accion
+        Column(
+            modifier             = Modifier.weight(0.6f),
+            verticalArrangement  = Arrangement.spacedBy(20.dp),
+            horizontalAlignment  = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.weight(1f))
+
+            // Boton Reproducir
+            Surface(
+                onClick  = { navController.navigate("playback") },
+                modifier = Modifier
+                    .focusRequester(firstBtnFocus)
+                    .fillMaxWidth(0.7f)
+                    .height(60.dp),
+                colors = ClickableSurfaceDefaults.colors(
+                    containerColor        = Color(0xFF1B5E20),
+                    focusedContainerColor = Color(0xFF76FF03)
+                ),
+                shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(8.dp))
+            ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        "▶  Reproducir",
+                        color      = Color.White,
+                        fontSize   = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
+
+            // Boton Volver
+            Surface(
+                onClick  = { navController.popBackStack() },
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(60.dp),
+                colors = ClickableSurfaceDefaults.colors(
+                    containerColor        = Color(0xFF37474F),
+                    focusedContainerColor = Color(0xFF90A4AE)
+                ),
+                shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(8.dp))
+            ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("← Volver", color = Color.White, fontSize = 18.sp)
+                }
+            }
+
+            Spacer(Modifier.weight(1f))
         }
     }
 }
