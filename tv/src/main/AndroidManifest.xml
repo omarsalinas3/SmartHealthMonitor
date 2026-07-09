@@ -18,17 +18,26 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <!-- TVActivity — Compose for TV + Navigation Compose (S12) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".TVActivity"
             android:exported="true"
             android:label="SmartHealth TV"
+            android:theme="@style/Theme.SmartHealthTV"
             android:configChanges="keyboard|keyboardHidden|navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!-- Categoría LEANBACK_LAUNCHER: aparece en launcher TV -->
+                <!-- LEANBACK_LAUNCHER: aparece en el launcher de Android TV -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity — Leanback BrowseSupportFragment (S11, conservada) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="SmartHealth TV Leanback"
+            android:configChanges="keyboard|keyboardHidden|navigation" />
 
     </application>
 
