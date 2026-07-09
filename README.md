@@ -47,29 +47,32 @@ Desarrollada como proyecto integrador — UTNG 9° Cuatrimestre 2025.
 
 ---
 
-## Arquitectura
-
-```
-SmartHealthMonitor/
-├── app/
-│   └── src/main/java/mx/utng/smarthealthmonitor/
-│       ├── data/
-│       │   ├── db/              # Room: LecturaFC, LecturaFCDao, SmartHealthDB
-│       │   ├── models/          # MockData para desarrollo
-│       │   ├── SmartHealthRepository.kt
-│       │   └── WearListenerService.kt
-│       ├── navigation/          # NavGraph + Screen routes
-│       ├── ui/
-│       │   ├── components/      # TarjetaDato, FilaHistorial
-│       │   ├── screens/         # Login, Dashboard, Historial, Alerta
-│       │   ├── theme/           # Color.kt, Type.kt, Theme.kt (MD3)
-│       │   └── viewmodel/       # DashboardViewModel
-│       └── SmartHealthApp.kt    # Application class — Room init
-└── wear/
-    └── src/main/java/mx/utng/smarthealthmonitor/wear/
-        ├── HealthDataService.kt  # PassiveMonitoringClient (Health Services API)
-        ├── WearDataSender.kt     # Wearable Message API
-        └── WearMainActivity.kt   # SensorManager + botón de simulación
+## Arquitectura — SmartHealth Monitor
+ 
+```text
+Sensor PPG (Wear OS)
+    │  Health Services API
+    ▼
+PassiveListenerService (wear)
+    │  MessageClient (BLE)
+    ▼
+WearListenerService (app)
+    │  SmartHealthRepository
+    ▼
+StateFlow<Int> (fcActual)  ──────────────────────────────────┐
+    │                                                        │
+    ▼                                                        ▼
+DashboardViewModel (app)              TvViewModel (tv)
+    │  collectAsState()                    │  collectAsState()
+    ▼                                        ▼
+DashboardScreen (Compose)          TvCatalogScreen (Compose TV)
+    └── CastButton ──► Chromecast (Remote Playback)
+ 
+Room DB (LecturaFC)  ◄──  Repository  ──►  Flow<List<LecturaFC>>
+                                                │
+                          ┌─────────────────────┴──────────┐
+                          ▼                                ▼
+               HistorialScreen (app)        TvCatalogScreen (tv)
 ```
 
 ---
