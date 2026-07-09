@@ -27,6 +27,9 @@ import androidx.compose.runtime.setValue
 import mx.utng.smarthealthmonitor.ui.viewmodel.DashboardViewModel
 import mx.utng.smarthealthmonitor.data.models.MockData
 import kotlinx.coroutines.launch
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.mediarouter.app.MediaRouteButton
+import com.google.android.gms.cast.framework.CastButtonFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,18 +50,7 @@ fun DashboardScreen(
     SmartHealthMonitorTheme {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "SmartHealth",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor    = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
+                DashboardTopBar(title = "SmartHealth")
             },
             floatingActionButton = {
                 FloatingActionButton(
@@ -182,6 +174,30 @@ fun DashboardScreen(
     }
 }
  
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DashboardTopBar(title: String) {
+    TopAppBar(
+        title = { Text(title, style = MaterialTheme.typography.titleLarge) },
+        actions = {
+            // CastButton: AndroidView que envuelve MediaRouteButton
+            AndroidView(
+                factory = { context ->
+                    MediaRouteButton(context).apply {
+                        CastButtonFactory.setUpMediaRouteButton(context, this)
+                    }
+                },
+                modifier = Modifier.size(48.dp)
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor    = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
+}
+
 @Preview(showBackground = true, name = "Dashboard - Light",
     showSystemUi = true, device = "id:pixel_6")
 @Preview(showBackground = true, name = "Dashboard - Dark",

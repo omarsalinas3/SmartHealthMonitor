@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-16T23:28:28.493758500Z">
+        <DropdownSelection timestamp="2026-07-09T18:58:38.932132Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Wear_OS_Square_API_36.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Pixel_7_API_36.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -26,10 +26,10 @@
       </SelectionState>
       <SelectionState runConfigName="tv">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-07-08T22:16:43.778756200Z">
+        <DropdownSelection timestamp="2026-07-09T18:58:31.445966200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Television_720p_API_36.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\salin\.android\avd\Pixel_7_API_36.avd" />
             </handle>
           </Target>
         </DropdownSelection>
