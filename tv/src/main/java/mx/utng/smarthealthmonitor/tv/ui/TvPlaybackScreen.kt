@@ -10,28 +10,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
-import androidx.tv.material3.*
+import androidx.tv.material3.ClickableSurfaceDefaults
+import androidx.tv.material3.Surface
+import androidx.tv.material3.Text
 
 /**
- * Pantalla de reproducción con ExoPlayer dentro de un Composable.
- * Usa AndroidView { PlayerView } — patrón oficial para TV.
- * El video de demo es un stream de Big Buck Bunny.
+ * Pantalla de reproduccion con ExoPlayer dentro de un Composable.
+ * ExoPlayer no tiene Composable nativo — se integra con AndroidView
+ * que envuelve un PlayerView del View system.
+ * DisposableEffect libera el player al salir (equivalente a onDestroyView).
+ * Ejercicio 03 — S12.
  */
 @Composable
 fun TvPlaybackScreen(navController: NavController) {
-    val context = LocalContext.current
+    val ctx = LocalContext.current
 
-    // Inicializar ExoPlayer con video de demo
+    // Crear ExoPlayer ligado al ciclo de vida del Composable
     val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
+        ExoPlayer.Builder(ctx).build().apply {
             val mediaItem = MediaItem.fromUri(
-                Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             )
             setMediaItem(mediaItem)
             prepare()
@@ -39,32 +42,42 @@ fun TvPlaybackScreen(navController: NavController) {
         }
     }
 
-    // Liberar ExoPlayer al salir de la pantalla
+    // CRITICO: liberar ExoPlayer al salir del Composable
     DisposableEffect(Unit) {
-        onDispose { exoPlayer.release() }
+        onDispose {
+            exoPlayer.release()  // equivalente a onDestroyView en Fragment
+        }
     }
 
-    Box(
-        modifier          = Modifier.fillMaxSize().background(Color.Black),
-        contentAlignment  = Alignment.Center
-    ) {
-        // AndroidView — puente entre View y Composable
+    Box(Modifier.fillMaxSize().background(Color.Black)) {
+
+        // AndroidView envuelve el PlayerView del View system
         AndroidView(
-            factory  = { ctx -> PlayerView(ctx).apply { player = exoPlayer } },
+            factory = { context ->
+                PlayerView(context).apply {
+                    player        = exoPlayer
+                    useController = true
+                }
+            },
             modifier = Modifier.fillMaxSize()
         )
 
-        // Botón Volver (esquina superior izquierda)
-        Button(
-            onClick  = {
-                exoPlayer.stop()
-                navController.popBackStack()
-            },
+        // Boton Back en esquina superior izquierda
+        Surface(
+            onClick  = { exoPlayer.stop(); navController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(24.dp)
+                .padding(24.dp),
+            colors   = ClickableSurfaceDefaults.colors(
+                containerColor        = Color(0x88000000),
+                focusedContainerColor = Color(0xCCFFFFFF)
+            )
         ) {
-            Text("← Volver", fontSize = 14.sp)
+            Text(
+                "← Volver",
+                color    = Color.White,
+                modifier = Modifier.padding(12.dp)
+            )
         }
     }
 }
