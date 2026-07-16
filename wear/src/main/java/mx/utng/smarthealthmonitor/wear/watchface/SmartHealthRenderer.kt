@@ -26,7 +26,8 @@ class SmartHealthRenderer(
     currentUserStyleRepository,
     watchState,
     CanvasType.HARDWARE,
-    interactiveDrawModeUpdateDelayMillis
+    interactiveDrawModeUpdateDelayMillis,
+    clearWithBackgroundTintBeforeRenderingHighlightLayer = true
 ) {
     // ─── Pinturas modo interactivo
     private val paintHora = Paint().apply {
