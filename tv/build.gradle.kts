@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -72,4 +73,10 @@ dependencies {
     // ExoPlayer (S12 — TvPlaybackScreen)
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-ui:1.4.1")
+
+    // Eclipse Paho MQTT para Android
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
+    implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")
+    // Kotlinx Serialization para JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
