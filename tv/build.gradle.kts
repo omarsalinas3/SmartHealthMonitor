@@ -26,6 +26,7 @@ android {
         }
         buildConfigField("String", "NEON_API_KEY", "\"${localProps["NEON_API_KEY"]}\"")
         buildConfigField("String", "NEON_HOST", "\"${localProps["NEON_HOST"]}\"")
+        buildConfigField("String", "NEON_CONN_STRING", "\"${localProps["NEON_CONN_STRING"]}\"")
     }
 
     buildTypes {

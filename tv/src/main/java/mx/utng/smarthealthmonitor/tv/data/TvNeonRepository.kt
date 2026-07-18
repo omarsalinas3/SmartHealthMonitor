@@ -7,10 +7,10 @@ import mx.utng.smarthealthmonitor.tv.data.remote.NeonRequest
  
 class TvNeonRepository {
  
-    /** Obtener historial completo de los 3 dispositivos */
     suspend fun obtenerHistorialCompleto(limite: Int = 50): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
+                auth    = NeonClient.AUTH_HEADER,
                 connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = """SELECT id,bpm,estado,dispositivo,hora,created_at
@@ -22,10 +22,10 @@ class TvNeonRepository {
             ).rows
         }
  
-    /** Estadísticas por dispositivo */
     suspend fun obtenerEstadisticas(): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
+                auth    = NeonClient.AUTH_HEADER,
                 connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = """SELECT dispositivo,
@@ -37,12 +37,11 @@ class TvNeonRepository {
                 )
             ).rows
         }
-        
-    // ── Consultas avanzadas (Opcional - Reto 9) ── //
-    
+ 
     suspend fun obtenerAlertas(): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
+                auth    = NeonClient.AUTH_HEADER,
                 connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = """SELECT * FROM lecturas_fc

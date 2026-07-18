@@ -8,8 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 object NeonClient {
     private const val BASE_URL = "https://${BuildConfig.NEON_HOST}/"
  
-    // Usaremos la API KEY del local.properties como la cadena de conexión
-    val CONN_STRING  = BuildConfig.NEON_API_KEY
+    val AUTH_HEADER  = "Bearer ${BuildConfig.NEON_API_KEY}"
+    val CONN_STRING  = BuildConfig.NEON_CONN_STRING
  
     val api: NeonApiService by lazy {
         Retrofit.Builder()
