@@ -12,6 +12,9 @@ class SmartHealthApp : Application() {
         super.onCreate()
         // Inicializar Room al arrancar la app
         SmartHealthRepository.init(this)
+        
+        // Programar sync periódico con Neon
+        mx.utng.smarthealthmonitor.data.sync.NeonSyncWorker.schedule(this)
 
         // Inicializar MQTT con el StateFlow del Repository
         mqttService = MqttAppService(
