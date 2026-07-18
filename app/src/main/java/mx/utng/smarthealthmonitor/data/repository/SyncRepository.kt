@@ -26,28 +26,26 @@ class SyncRepository(
     private suspend fun sincronizarHaciaNeon(lectura: LecturaFC) =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
+                connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
-                    query  = """INSERT INTO lecturas_fc (bpm, estado, dispositivo, hora)
-                               VALUES ($1, $2, $3, $4) RETURNING *""".trimIndent(),
+                    query  = "INSERT INTO lecturas_fc (bpm, estado, dispositivo, hora) VALUES (\$1, \$2, \$3, \$4) RETURNING *",
                     params = listOf(lectura.bpm, lectura.estado, lectura.dispositivo, lectura.hora)
                 )
             )
         }
 
-    /** Descarga de Neon y borra los locales primero para mostrar solo datos reales */
+    /** Descarga los registros de Neon y reemplaza los locales */
     suspend fun sincronizarDesdeNeon(limite: Int = 50) = withContext(Dispatchers.IO) {
         try {
             val response = NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
+                connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = "SELECT id,bpm,estado,dispositivo,hora FROM lecturas_fc ORDER BY id DESC LIMIT \$1",
                     params = listOf(limite)
                 )
             )
-            android.util.Log.d("SYNC", "📥 rows recibidos: ${response.rows.size}")
+            android.util.Log.d("SYNC", "📥 Neon rows: ${response.rows.size}")
             if (response.rows.isNotEmpty()) {
-                // Borrar locales primero para que no aparezcan mezclados
                 dao.borrarTodas()
                 response.rows.forEach { dto ->
                     dao.upsert(LecturaFC(
@@ -61,7 +59,7 @@ class SyncRepository(
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("SYNC", "❌ Error descargando de Neon: ${e.message}", e)
+            android.util.Log.e("SYNC", "❌ Error: ${e.message}", e)
         }
     }
 
@@ -72,7 +70,7 @@ class SyncRepository(
                 sincronizarHaciaNeon(lectura)
                 dao.marcarSincronizado(lectura.id.toLong())
             } catch (e: Exception) {
-                android.util.Log.w("SYNC", "Aún sin internet: ${e.message}")
+                android.util.Log.w("SYNC", "Sin internet: ${e.message}")
             }
         }
     }

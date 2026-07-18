@@ -6,11 +6,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NeonClient {
-    // Usar el endpoint directo (sin -pooler) para el HTTP SQL API
-    private const val BASE_URL = "https://ep-jolly-bonus-ajoj7vt8.us-east-2.aws.neon.tech/"
+    // ✅ Usar el endpoint del POOLER en la URL (es el que funciona con HTTP SQL API)
+    private const val BASE_URL = "https://ep-jolly-bonus-ajoj7vt8-pooler.c-3.us-east-2.aws.neon.tech/"
 
-    // Solo se necesita la Neon API Key como Bearer token
-    val AUTH_HEADER = "Bearer ${BuildConfig.NEON_API_KEY}"
+    // ✅ Neon-Connection-String con el endpoint del pooler (sin channel_binding)
+    val CONN_STRING = "postgresql://neondb_owner:npg_XARsI7iJcUC8@ep-jolly-bonus-ajoj7vt8-pooler.c-3.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
     val api: NeonApiService by lazy {
         Retrofit.Builder()

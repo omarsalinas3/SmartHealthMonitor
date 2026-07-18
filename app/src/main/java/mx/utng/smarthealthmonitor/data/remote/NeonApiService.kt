@@ -22,12 +22,12 @@ data class LecturaFcDto(
     val created_at  : String? = null,
 )
 
-/** Interfaz Retrofit — solo Authorization, sin Neon-Connection-String */
+/** Interfaz Retrofit — usa Neon-Connection-String (sin Authorization) */
 interface NeonApiService {
 
     @POST("sql")
     suspend fun executeQuery(
-        @Header("Authorization") auth: String,
+        @Header("Neon-Connection-String") connStr: String,
         @Body request: NeonRequest
     ): NeonResponse<LecturaFcDto>
 }

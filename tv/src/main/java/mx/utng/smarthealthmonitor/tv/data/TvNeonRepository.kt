@@ -10,12 +10,9 @@ class TvNeonRepository {
     suspend fun obtenerHistorialCompleto(limite: Int = 50): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
+                connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
-                    query  = """SELECT id,bpm,estado,dispositivo,hora,created_at
-                               FROM lecturas_fc
-                               ORDER BY id DESC
-                               LIMIT $1""".trimIndent(),
+                    query  = "SELECT id,bpm,estado,dispositivo,hora,created_at FROM lecturas_fc ORDER BY id DESC LIMIT \$1",
                     params = listOf(limite)
                 )
             ).rows
@@ -24,14 +21,9 @@ class TvNeonRepository {
     suspend fun obtenerEstadisticas(): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
+                connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
-                    query  = """SELECT dispositivo,
-                               ROUND(AVG(bpm)) AS bpm,
-                               'Promedio' AS estado,
-                               MAX(hora) AS hora
-                               FROM lecturas_fc
-                               GROUP BY dispositivo""".trimIndent()
+                    query  = "SELECT dispositivo, ROUND(AVG(bpm)) AS bpm, 'Promedio' AS estado, MAX(hora) AS hora FROM lecturas_fc GROUP BY dispositivo"
                 )
             ).rows
         }
@@ -39,12 +31,9 @@ class TvNeonRepository {
     suspend fun obtenerAlertas(): List<LecturaFcDto> =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
+                connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
-                    query  = """SELECT * FROM lecturas_fc
-                                WHERE (bpm < 60 OR bpm > 100)
-                                  AND created_at > NOW() - INTERVAL '24 hours'
-                                ORDER BY id DESC""".trimIndent()
+                    query  = "SELECT * FROM lecturas_fc WHERE (bpm < 60 OR bpm > 100) AND created_at > NOW() - INTERVAL '24 hours' ORDER BY id DESC"
                 )
             ).rows
         }
