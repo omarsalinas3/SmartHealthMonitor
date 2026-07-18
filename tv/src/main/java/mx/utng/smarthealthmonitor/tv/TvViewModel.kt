@@ -1,69 +1,55 @@
-// tv/.../tv/TvViewModel.kt
 package mx.utng.smarthealthmonitor.tv
-
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
-
-/**
- * ViewModel del módulo Android TV.
- * Expone [state] con lecturas mapeadas a TvLecturaDisplay.
- * Se instancia con [TvViewModelFactory] que recibe Context
- * para garantizar que TvRepository esté inicializado.
- */
-class TvViewModel(context: Context) : ViewModel() {
-
-    private val mqttSubscriber = mx.utng.smarthealthmonitor.tv.mqtt.MqttTvSubscriber(context) { tvMsg ->
-        // Guardamos en Room y se actualiza todo el flujo reactivo automáticamente
-        TvRepository.actualizarFC(tvMsg.bpm)
+import kotlinx.coroutines.launch
+import mx.utng.smarthealthmonitor.tv.data.TvNeonRepository
+import mx.utng.smarthealthmonitor.tv.mqtt.MqttTvSubscriber
+ 
+class TvViewModel(private val context: Context) : ViewModel() {
+    private val neonRepo = TvNeonRepository()
+    private val _state   = MutableStateFlow(TvUiState())
+    val state: StateFlow<TvUiState> = _state.asStateFlow()
+    
+    private val mqttSubscriber = MqttTvSubscriber(context) { tvMsg ->
+        _state.update { it.copy(fcActual = tvMsg.bpm) }
     }
-
-    init {
-        // Garantizar init aunque TvApplication no lo haya llamado
-        TvRepository.init(context)
-        // Conectar a MQTT Cloud
+ 
+    init { 
+        cargarDatos()
         mqttSubscriber.connect()
     }
-
-    // FC actual del wearable
-    val fc: StateFlow<Int> = TvRepository.fcFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
-
-    /** Estado UI unificado: lecturas mapeadas + FC actual */
-    val state: StateFlow<TvUiState> = combine(
-        TvRepository.obtenerHistorial(),
-        TvRepository.fcFlow
-    ) { lecturas, fc ->
-        TvUiState(
-            lecturas = lecturas.map { l ->
-                TvLecturaDisplay(
-                    id     = l.id,
-                    bpm    = l.valorBpm,
-                    estado = if (l.esNormal) "Normal" else "⚠ Alta",
-                    hora   = l.hora
-                )
-            },
-            fcActual = fc
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
-        TvUiState()
-    )
-
-    // Mantener historial separado para compatibilidad con TvDetailScreen (conversión Room)
-    val historial = TvRepository.obtenerHistorial()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
+ 
+    fun cargarDatos() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading=true) }
+            try {
+                val lecturas = neonRepo.obtenerHistorialCompleto(50)
+                val stats    = neonRepo.obtenerEstadisticas()
+                val alertas  = neonRepo.obtenerAlertas()
+                _state.update { it.copy(
+                    lecturas     = lecturas.map { dto -> dto.toTvLecturaDisplay() },
+                    estadisticas = stats.map { dto -> dto.toTvLecturaDisplay() },
+                    alertas      = alertas.map { dto -> dto.toTvLecturaDisplay() },
+                    isLoading    = false
+                )}
+            } catch (e: Exception) {
+                _state.update { it.copy(error=e.message, isLoading=false) }
+            }
+        }
+    }
+    
+    fun refresh() = cargarDatos()
+    
     override fun onCleared() {
         super.onCleared()
         mqttSubscriber.disconnect()
     }
 }
-
-/** Factory que pasa Context al ViewModel para inicializar Room */
+ 
+/** Factory que pasa Context al ViewModel */
 class TvViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

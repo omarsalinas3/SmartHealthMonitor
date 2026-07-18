@@ -1,19 +1,31 @@
-// tv/.../tv/TvUiState.kt
 package mx.utng.smarthealthmonitor.tv
-
-/**
- * Modelo de presentación para una lectura de FC en la UI de TV.
- * Mapea TvLecturaFC (Room) a campos legibles por el Composable.
- */
+import mx.utng.smarthealthmonitor.tv.data.remote.LecturaFcDto
+ 
+/** Modelo de presentación para una lectura en TV */
 data class TvLecturaDisplay(
-    val id     : Int,
-    val bpm    : Int,
-    val estado : String,   // "Normal" | "⚠ Alta"
-    val hora   : String
+    val id          : Int,
+    val bpm         : Int,
+    val estado      : String,
+    val dispositivo : String,
+    val hora        : String,
+    val fecha       : String = ""
 )
-
+ 
 /** Estado UI del módulo TV */
 data class TvUiState(
-    val lecturas : List<TvLecturaDisplay> = emptyList(),
-    val fcActual : Int                   = 0
+    val lecturas     : List<TvLecturaDisplay> = emptyList(),
+    val estadisticas : List<TvLecturaDisplay> = emptyList(),
+    val alertas      : List<TvLecturaDisplay> = emptyList(),
+    val isLoading    : Boolean                = false,
+    val error        : String?                = null,
+    val fcActual     : Int                    = 0
+)
+ 
+fun LecturaFcDto.toTvLecturaDisplay() = TvLecturaDisplay(
+    id          = id,
+    bpm         = bpm,
+    estado      = estado,
+    dispositivo = dispositivo,
+    hora        = hora,
+    fecha       = fecha
 )

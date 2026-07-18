@@ -40,7 +40,10 @@ fun TvDetailScreen(
     )
 ) {
     val state   by viewModel.state.collectAsStateWithLifecycle()
-    val lectura = state.lecturas.find { it.id == lecturaId } ?: return
+    val lectura = state.lecturas.find { it.id == lecturaId }
+        ?: state.estadisticas.find { it.id == lecturaId }
+        ?: state.alertas.find { it.id == lecturaId }
+        ?: return
 
     // FocusRequester para mover el foco al primer boton al entrar
     val firstBtnFocus = remember { FocusRequester() }

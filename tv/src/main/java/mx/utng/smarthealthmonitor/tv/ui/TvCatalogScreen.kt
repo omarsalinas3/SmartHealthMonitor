@@ -19,6 +19,7 @@ import androidx.tv.material3.Text
 import mx.utng.smarthealthmonitor.tv.TvMockData
 import mx.utng.smarthealthmonitor.tv.TvViewModel
 import mx.utng.smarthealthmonitor.tv.TvViewModelFactory
+import mx.utng.smarthealthmonitor.tv.TvLecturaDisplay
 import mx.utng.smarthealthmonitor.tv.db.TvLecturaFC
 
 /**
@@ -33,18 +34,10 @@ fun TvCatalogScreen(
         factory = TvViewModelFactory(LocalContext.current)
     )
 ) {
-    val historial by viewModel.historial.collectAsStateWithLifecycle()
-    val fc        by viewModel.fc.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    // Pre-computar listas fuera del scope de LazyRow
-    val historialItems = historial.ifEmpty {
-        TvMockData.historialFC.map {
-            TvLecturaFC(valorBpm = it.valorBpm, hora = it.hora, esNormal = it.esNormal)
-        }
-    }
-    val alertasItems = TvMockData.alertasRecientes.map {
-        TvLecturaFC(valorBpm = it.valorBpm, hora = it.hora, esNormal = it.esNormal)
-    }
+    val historialItems = uiState.lecturas
+
 
     Column(
         modifier = Modifier
@@ -57,14 +50,26 @@ fun TvCatalogScreen(
             color = Color.White
         )
         Text(
-            text     = "FC actual: $fc bpm",
+            text     = "FC actual: ${uiState.fcActual} bpm",
             style    = MaterialTheme.typography.titleMedium,
             color    = Color(0xFF64B5F6),
             modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
         )
+        
+        // Fila 1: Estado Actual (3 dispositivos)
+        Text("Estado Actual (Estadísticas)", color = Color.LightGray,
+             style = MaterialTheme.typography.labelLarge)
+        Spacer(Modifier.height(8.dp))
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            items(uiState.estadisticas) { stat ->
+                FcCardItem(lectura = stat, onClick = { onCardClick(stat.id) })
+            }
+        }
+        
+        Spacer(Modifier.height(32.dp))
 
-        // Fila: Historial FC
-        Text("Historial FC", color = Color.LightGray,
+        // Fila 2: Historial Completo
+        Text("Historial Completo (Últimas 50)", color = Color.LightGray,
              style = MaterialTheme.typography.labelLarge)
         Spacer(Modifier.height(8.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -75,13 +80,13 @@ fun TvCatalogScreen(
 
         Spacer(Modifier.height(32.dp))
 
-        // Fila: Alertas recientes
-        Text("Alertas recientes", color = Color.LightGray,
+        // Fila 3: Alertas recientes
+        Text("Alertas recientes (Últimas 24h)", color = Color.LightGray,
              style = MaterialTheme.typography.labelLarge)
         Spacer(Modifier.height(8.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            items(alertasItems) { lectura ->
-                FcCardItem(lectura = lectura, onClick = { onCardClick(lectura.id) })
+            items(uiState.alertas) { alerta ->
+                FcCardItem(lectura = alerta, onClick = { onCardClick(alerta.id) })
             }
         }
     }
@@ -90,10 +95,10 @@ fun TvCatalogScreen(
 /** Card individual de FC — Surface con background manual para evitar ClickableSurfaceDefaults */
 @Composable
 fun FcCardItem(
-    lectura: TvLecturaFC,
+    lectura: TvLecturaDisplay,
     onClick: () -> Unit
 ) {
-    val bgColor = if (lectura.esNormal) Color(0xFF1B4F8A) else Color(0xFFB3261E)
+    val bgColor = if (lectura.estado == "Normal" || lectura.estado == "Promedio") Color(0xFF1B4F8A) else Color(0xFFB3261E)
 
     Surface(
         onClick  = onClick,
@@ -108,12 +113,12 @@ fun FcCardItem(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text  = "${lectura.valorBpm} bpm",
+                    text  = "${lectura.bpm} bpm",
                     color = Color.White,
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    text  = lectura.hora,
+                    text  = "${lectura.dispositivo} - ${lectura.hora}",
                     color = Color.LightGray,
                     style = MaterialTheme.typography.bodySmall
                 )

@@ -34,12 +34,7 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity — Leanback BrowseSupportFragment (S11, conservada) -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:label="SmartHealth TV Leanback"
-            android:configChanges="keyboard|keyboardHidden|navigation" />
+
 
     </application>
 
