@@ -15,9 +15,16 @@ import kotlinx.coroutines.flow.*
  */
 class TvViewModel(context: Context) : ViewModel() {
 
+    private val mqttSubscriber = mx.utng.smarthealthmonitor.tv.mqtt.MqttTvSubscriber(context) { tvMsg ->
+        // Guardamos en Room y se actualiza todo el flujo reactivo automáticamente
+        TvRepository.actualizarFC(tvMsg.bpm)
+    }
+
     init {
         // Garantizar init aunque TvApplication no lo haya llamado
         TvRepository.init(context)
+        // Conectar a MQTT Cloud
+        mqttSubscriber.connect()
     }
 
     // FC actual del wearable
@@ -49,6 +56,11 @@ class TvViewModel(context: Context) : ViewModel() {
     // Mantener historial separado para compatibilidad con TvDetailScreen (conversión Room)
     val historial = TvRepository.obtenerHistorial()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    override fun onCleared() {
+        super.onCleared()
+        mqttSubscriber.disconnect()
+    }
 }
 
 /** Factory que pasa Context al ViewModel para inicializar Room */
