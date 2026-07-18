@@ -13,6 +13,7 @@ import mx.utng.smarthealthmonitor.wear.data.WearLecturaFC
 import mx.utng.smarthealthmonitor.wear.mqtt.MqttWearPublisher
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.Dispatchers
 
 class WearDashboardViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -43,6 +44,8 @@ class WearDashboardViewModel(application: Application) : AndroidViewModel(applic
             initialValue = emptyList()
         )
 
+    private val neonRepo = mx.utng.smarthealthmonitor.wear.data.WearNeonRepository()
+
     init {
         mqttPublisher.connect()
         viewModelScope.launch {
@@ -52,7 +55,14 @@ class WearDashboardViewModel(application: Application) : AndroidViewModel(applic
                     bpm > 100 -> "FC Alta"
                     else -> "Normal" 
                 }
+                // 1. MQTT
                 mqttPublisher.publishFC(bpm, estado)
+                
+                // 2. Neon
+                launch(Dispatchers.IO) {
+                    runCatching { neonRepo.publicarLectura(bpm, estado) }
+                        .onFailure { android.util.Log.w("WEAR","Sin red: ${it.message}") }
+                }
             }
         }
     }
