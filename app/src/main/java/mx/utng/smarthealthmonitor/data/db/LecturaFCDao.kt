@@ -17,6 +17,10 @@ interface LecturaFCDao {
     /** Upsert: inserta o reemplaza si el id ya existe */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(lectura: LecturaFC)
+
+    /** Borrar todos los registros locales (para limpiar antes de sync) */
+    @Query("DELETE FROM lecturas_fc")
+    suspend fun borrarTodas()
  
     /** Obtener los registros que aún no fueron a Neon */
     @Query("SELECT * FROM lecturas_fc WHERE sincronizado = 0")

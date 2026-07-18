@@ -4,13 +4,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
- 
+
 object NeonClient {
-    private const val BASE_URL = "https://${BuildConfig.NEON_HOST}/"
- 
-    val AUTH_HEADER  = "Bearer ${BuildConfig.NEON_API_KEY}"
-    val CONN_STRING  = BuildConfig.NEON_CONN_STRING
- 
+    // Endpoint directo de Neon (sin pooler) para el HTTP SQL API
+    private const val BASE_URL = "https://ep-jolly-bonus-ajoj7vt8.us-east-2.aws.neon.tech/"
+
+    val AUTH_HEADER = "Bearer ${BuildConfig.NEON_API_KEY}"
+
     val api: NeonApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

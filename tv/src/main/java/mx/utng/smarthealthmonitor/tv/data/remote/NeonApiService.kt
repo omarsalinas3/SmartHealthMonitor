@@ -1,14 +1,14 @@
 package mx.utng.smarthealthmonitor.tv.data.remote
 import retrofit2.http.*
- 
+
 data class NeonRequest(val query: String, val params: List<Any> = emptyList())
- 
+
 data class NeonResponse<T>(
     val rows     : List<T> = emptyList(),
     val rowCount : Int     = 0,
     val command  : String  = "",
 )
- 
+
 data class LecturaFcDto(
     val id          : Int    = 0,
     val bpm         : Int    = 0,
@@ -18,13 +18,12 @@ data class LecturaFcDto(
     val fecha       : String? = null,
     val created_at  : String? = null,
 )
- 
+
 interface NeonApiService {
- 
+
     @POST("sql")
     suspend fun executeQuery(
-        @Header("Authorization")          auth    : String,
-        @Header("Neon-Connection-String") connStr : String,
+        @Header("Authorization") auth: String,
         @Body request: NeonRequest
     ): NeonResponse<LecturaFcDto>
 }
