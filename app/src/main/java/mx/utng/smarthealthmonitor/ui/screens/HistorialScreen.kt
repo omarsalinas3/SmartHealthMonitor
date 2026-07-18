@@ -52,26 +52,7 @@ fun HistorialScreen(
                     )
                 )
             },
-            // ⭐ Reto adicional: FAB para limpiar historial antiguo
-            floatingActionButton = {
-                if (lecturas.isNotEmpty()) {
-                    FloatingActionButton(
-                        onClick = {
-                            SmartHealthRepository.limpiarHistorialAntiguo()
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Historial limpiado")
-                            }
-                        },
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "Limpiar historial",
-                            tint = MaterialTheme.colorScheme.onErrorContainer
-                        )
-                    }
-                }
-            },
+            // FAB removido temporalmente (el reto de limpieza fue eliminado del DAO para la integración Neon)
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             if (lecturas.isEmpty()) {

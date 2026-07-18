@@ -12,8 +12,6 @@ class SmartHealthApp : Application() {
         super.onCreate()
         // Inicializar Room al arrancar la app
         SmartHealthRepository.init(this)
-        // Reto adicional: limpiar lecturas con más de 7 días
-        SmartHealthRepository.limpiarHistorialAntiguo()
 
         // Inicializar MQTT con el StateFlow del Repository
         mqttService = MqttAppService(

@@ -48,7 +48,9 @@ object SmartHealthRepository {
         _fcFlow.value = bpm
         // Persistir en Room automáticamente (Ejercicio 02)
         scope.launch {
-            dao?.insertar(LecturaFC(valorBpm = bpm))
+            val horaActual = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
+            val estadoActual = if(bpm in 60..100) "Normal" else if(bpm < 60) "FC Baja" else "FC Alta"
+            dao?.insertar(LecturaFC(bpm = bpm, estado = estadoActual, hora = horaActual))
         }
     }
 
@@ -62,13 +64,6 @@ object SmartHealthRepository {
 
     // Flow del historial desde Room — actualización reactiva
     fun obtenerHistorial(): Flow<List<LecturaFC>> =
-        dao?.obtenerUltimas() ?: emptyFlow()
+        dao?.obtenerTodas() ?: emptyFlow()
 
-    // Reto adicional: limpiar lecturas con más de 7 días
-    fun limpiarHistorialAntiguo() {
-        scope.launch {
-            val sieteDiasAtras = System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000)
-            dao?.limpiarViejos(sieteDiasAtras)
-        }
-    }
 }
