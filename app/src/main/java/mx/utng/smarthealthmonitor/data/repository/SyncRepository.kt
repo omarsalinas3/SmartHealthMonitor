@@ -38,7 +38,6 @@ class SyncRepository(
     private suspend fun sincronizarHaciaNeon(lectura: LecturaFC) =
         withContext(Dispatchers.IO) {
             NeonClient.api.executeQuery(
-                auth    = NeonClient.AUTH_HEADER,
                 connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = """INSERT INTO lecturas_fc (bpm, estado, dispositivo, hora)
@@ -55,7 +54,6 @@ class SyncRepository(
      */
     suspend fun sincronizarDesdeNeon(limite: Int = 50) = withContext(Dispatchers.IO) {
         val response = NeonClient.api.executeQuery(
-            auth    = NeonClient.AUTH_HEADER,
             connStr = NeonClient.CONN_STRING,
             request = NeonRequest(
                 query  = "SELECT id,bpm,estado,dispositivo,hora FROM lecturas_fc ORDER BY created_at DESC LIMIT $1",
