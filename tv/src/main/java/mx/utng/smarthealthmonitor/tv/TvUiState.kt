@@ -27,5 +27,5 @@ fun LecturaFcDto.toTvLecturaDisplay() = TvLecturaDisplay(
     estado      = estado,
     dispositivo = dispositivo,
     hora        = hora,
-    fecha       = fecha
+    fecha       = fecha ?: ""
 )

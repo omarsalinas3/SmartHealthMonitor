@@ -44,4 +44,8 @@ class DashboardViewModel : ViewModel() {
             started      = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+        
+    fun sincronizarManual() {
+        SmartHealthRepository.triggerSync()
+    }
 }

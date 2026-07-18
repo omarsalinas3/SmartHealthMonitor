@@ -17,12 +17,12 @@ data class NeonResponse<T>(
 @Serializable
 data class LecturaFcDto(
     val id          : Int    = 0,
-    val bpm         : Int,
-    val estado      : String,
-    val dispositivo : String,
-    val hora        : String,
-    val fecha       : String  = "",
-    val created_at  : String  = "",
+    val bpm         : Int    = 0,
+    val estado      : String = "",
+    val dispositivo : String = "app",
+    val hora        : String = "",
+    val fecha       : String?  = null,
+    val created_at  : String?  = null,
 )
  
 /** Interfaz Retrofit para la Neon HTTP API */

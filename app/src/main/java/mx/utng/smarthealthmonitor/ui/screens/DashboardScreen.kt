@@ -169,6 +169,21 @@ fun DashboardScreen(
                         }
                     }
                 }
+                
+                // ── Botón de Sincronización Manual ────────
+                item {
+                    OutlinedButton(
+                        onClick = {
+                            viewModel.sincronizarManual()
+                            scope.launch {
+                                snackbarHost.showSnackbar("Sincronizando con Neon...", duration = SnackbarDuration.Short)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Sincronizar ahora (Nube)")
+                    }
+                }
             }
         }
     }

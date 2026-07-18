@@ -42,7 +42,7 @@ class SyncRepository(
                 connStr = NeonClient.CONN_STRING,
                 request = NeonRequest(
                     query  = """INSERT INTO lecturas_fc (bpm, estado, dispositivo, hora)
-                               VALUES ($1, $2, $3, $4) RETURNING id""".trimIndent(),
+                               VALUES ($1, $2, $3, $4) RETURNING *""".trimIndent(),
                     params = listOf(lectura.bpm, lectura.estado, lectura.dispositivo, lectura.hora)
                 )
             )

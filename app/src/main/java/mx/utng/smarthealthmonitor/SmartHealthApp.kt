@@ -16,11 +16,13 @@ class SmartHealthApp : Application() {
         // Programar sync periódico con Neon
         mx.utng.smarthealthmonitor.data.sync.NeonSyncWorker.schedule(this)
 
-        // Inicializar MQTT con el StateFlow del Repository
         mqttService = MqttAppService(
             context = this,
             onFcReceived = SmartHealthRepository::actualizarFC
         )
         mqttService.connect()
+        
+        // Trigger initial sync on startup
+        SmartHealthRepository.triggerSync()
     }
 }

@@ -37,20 +37,22 @@ object SmartHealthRepository {
     private val _spO2Flow = MutableStateFlow(0)
     val spO2Flow: StateFlow<Int> = _spO2Flow.asStateFlow()
 
-    // DAO de Room (se inicializa en Application.onCreate)
+    // DAO de Room y SyncRepository
     private var dao: LecturaFCDao? = null
-
+    private var syncRepo: mx.utng.smarthealthmonitor.data.repository.SyncRepository? = null
+ 
     fun init(context: Context) {
         dao = SmartHealthDB.getDatabase(context).lecturaDao()
+        syncRepo = mx.utng.smarthealthmonitor.data.repository.SyncRepository(dao!!)
     }
 
     fun actualizarFC(bpm: Int) {
         _fcFlow.value = bpm
-        // Persistir en Room automáticamente (Ejercicio 02)
         scope.launch {
             val horaActual = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date())
             val estadoActual = if(bpm in 60..100) "Normal" else if(bpm < 60) "FC Baja" else "FC Alta"
-            dao?.insertar(LecturaFC(bpm = bpm, estado = estadoActual, hora = horaActual))
+            val lectura = LecturaFC(bpm = bpm, estado = estadoActual, hora = horaActual, dispositivo = "app")
+            syncRepo?.insertarLectura(lectura)
         }
     }
 
@@ -65,5 +67,16 @@ object SmartHealthRepository {
     // Flow del historial desde Room — actualización reactiva
     fun obtenerHistorial(): Flow<List<LecturaFC>> =
         dao?.obtenerTodas() ?: emptyFlow()
+        
+    fun triggerSync() {
+        scope.launch {
+            try {
+                syncRepo?.enviarPendientes()
+                syncRepo?.sincronizarDesdeNeon(100)
+            } catch (e: Exception) {
+                android.util.Log.e("SYNC", "Error manual sync", e)
+            }
+        }
+    }
 
 }
